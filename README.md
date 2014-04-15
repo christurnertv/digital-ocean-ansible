@@ -76,7 +76,7 @@ We will be installing Ansible from source as opposed to using `pip` since some o
 
 ```
 cd ~/Downloads
-git clone git://github.com/ansible/ansible.git
+git clone https://github.com/ansible/ansible.git
 cd ./ansible
 sudo make install
 ```
@@ -94,7 +94,7 @@ First, clone this repository to your computer using the following command:
 
 ```
 cd ~/Desktop
-git clone git://github.com/cturner80/digital-ocean-ansible.git
+git clone https://github.com/cturner80/digital-ocean-ansible.git
 ```
 
 From your Desktop, open the `hosts` file within the `digital-ocean-ansible` directory with your favorite editor. Inside, you will find a line that looks like this:
