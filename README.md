@@ -4,6 +4,8 @@ This guide will walk you through all the steps to get your very own Web/DB Virtu
 
 When we are done, you will be able to host multiple sites on your server. You will also be able to push changes to your sites via Git for super easy deployment. Password authentication will be disabled via SSH (keys only). The firewall will only allow SSH, HTTP, and HTTPS.
 
+Your sites will be stored in `/var/www` and your Git repositories will be in `/var/git`.
+
 Note: This guide was written for Mac OSX.
 
 ## 1. Sign up for Digital Ocean
