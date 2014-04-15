@@ -16,20 +16,8 @@
 # Ubuntu 13.10 has a bug in where the mcrypt ini file is placed.
 # Work around those by copying the file to the proper location and enabling mcrypt.
 
-- name: Ensure mcrypt is enabled
-  command: /usr/bin/test -e /etc/php5/mods-available/mcrypt.ini
-  register: mcrypt_enabled
-  ignore_errors: True
-
-- name: Copy mcrypt ini to proper location
-  copy: content=/etc/php5/conf.d/mcrypt.ini dest=/etc/php5/mods-available/mcrypt.ini
-  when: mcrypt_enabled|failed
-  notify:
-    - restart php-fpm
-
-- name: Enable mcrypt
-  command: php5enmod mcrypt
-  when: mcrypt_enabled|failed
+- name: Copy mcrypt ini to proper location and enable
+  shell: cp /etc/php5/conf.d/mcrypt.ini /etc/php5/mods-available/mcrypt.ini && php5enmod mcrypt creates=/etc/php5/mods-available/mcrypt.ini
   notify:
     - restart php-fpm
 
