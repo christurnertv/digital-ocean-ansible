@@ -1,7 +1,7 @@
 [{{ domain }}]
 
-user = {{ ansible_ssh_user }}
-group = {{ ansible_ssh_user }}
+user = www-data
+group = www-data
 
 request_slowlog_timeout = 5s
 slowlog = /var/log/php-fpm/slowlog-{{ domain }}.log
