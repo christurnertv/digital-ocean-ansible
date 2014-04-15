@@ -1,0 +1,9 @@
+---
+
+- name: Install fail2ban
+  apt: package=fail2ban state=present
+
+- name: Copy fail2ban default config
+  template: src=templates/fail2ban.conf.j2 dest=/etc/fail2ban/jail.local
+  notify:
+    - restart fail2ban

@@ -1,0 +1,19 @@
+---
+
+- name: Write hostname to /etc/hostname
+  copy:
+    content: "{{ hostname }}"
+    dest: /etc/hostname
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Issue hostname command
+  hostname: name={{ hostname }}
+
+- name: Add hostname entries to hosts file (localhost)
+  lineinfile: dest=/etc/hosts regexp="^127.0.0.1" line="127.0.0.1 localhost {{ hostname }}" state=present
+
+# uncomment if you want to add ip/domain entry
+#- name: Add hostname entries to hosts file (network ip)
+#  lineinfile: dest=/etc/hosts regexp="^{{ ansible_eth0.ipv4.address }}" line="{{ ansible_eth0.ipv4.address }} {{ hostname }}.{{ domain }}" state=present

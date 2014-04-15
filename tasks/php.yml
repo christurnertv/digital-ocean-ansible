@@ -1,0 +1,36 @@
+---
+
+- name: Install php
+  apt: package={{ item }} state=present
+  with_items:
+    - php5
+    - php5-cli
+    - php5-json
+    - php5-mysql
+    - php5-curl
+    - php5-mcrypt
+    - php5-gd
+    - php5-imagick
+    - php5-fpm
+
+- name: Remove default php-fpm pool
+  file: path=/etc/php5/fpm/pool.d/www.conf state=absent
+  notify:
+    - restart php-fpm
+
+- name: Create php-fpm log directory
+  file: path=/var/log/php-fpm state=directory owner=www-data
+
+- name: Create php log directory
+  file: path=/etc/log/php state=directory owner=www-data
+
+- name: Create php upload directory
+  file: path=/etc/lib/php/upload state=directory owner=www-data
+
+- name: Create php session directory
+  file: path=/etc/lib/php/session state=directory owner=www-data
+
+- name: Modify php.ini settings
+  copy: src=templates/php.ini dest=/etc/php5/fpm/php.ini
+  notify:
+    - restart php-fpm

@@ -1,0 +1,31 @@
+---
+
+# test mail with the following command:
+# echo "Mail test." | mail -s "Just Testing" mailtest123@mailinator.com
+
+- name: Set up postmail selections
+  command: echo "postfix postfix/main_mailer_type select Internet Site" | debconf-set-selections
+
+- name: Set up postmail selections
+  command: echo "postfix postfix/mailname string localhost" | debconf-set-selections
+
+- name: Set up postmail selections
+  command: echo "postfix postfix/destinations string localhost.localdomain, localhost" | debconf-set-selections
+
+- name: Install postfix
+  apt: pkg=postfix state=present
+
+- name: Set postfix loopback-only
+  lineinfile: dest=/etc/postfix/main.cf regexp="^inet_interfaces" line="inet_interfaces = loopback-only" state=present
+  notify:
+    - restart postfix
+
+- name: Set postfix hostname
+  lineinfile: dest=/etc/postfix/main.cf regexp="^myhostname" line="myhostname = {{ hostname }}.{{ domain }}" state=present
+  notify:
+    - restart postfix
+
+- name: Create root email alias
+  lineinfile: dest=/etc/aliases regexp="^root" line="root{{':'}} {{ admin_email }}" state=present
+  notify:
+    - restart postfix

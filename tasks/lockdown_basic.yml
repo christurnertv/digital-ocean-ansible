@@ -1,0 +1,15 @@
+---
+
+# - name: Change root password
+#   user: name=root password={{ new_root_password }}
+#   when: new_root_password is defined
+
+# - name: Ensure public key is in authorized_keys
+#   authorized_key:
+#     key: "{{ auth_public_key }}"
+#     user: root
+
+- name: Require key for root login via ssh
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin without-password" state=present
+  notify:
+    - restart ssh

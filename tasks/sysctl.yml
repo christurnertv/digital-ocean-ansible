@@ -1,0 +1,4 @@
+---
+
+- name: Harden TCP/IP stack against SYN floods
+  sysctl: name="net.ipv4.tcp_syncookies" value=1 sysctl_set=yes state=present reload=yes

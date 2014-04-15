@@ -1,0 +1,13 @@
+---
+
+- name: Stop atd
+  service: name=atd state=stopped
+
+- name: Detect atd init file
+  command: "[ -f /etc/init/atd.conf ]"
+  register: atd_init_exists
+  ignore_errors: True
+
+- name: Disable atd autostart
+  command: mv /etc/init/atd.conf /etc/init/atd.conf.noexec
+  when: atd_init_exists|success

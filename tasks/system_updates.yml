@@ -1,0 +1,25 @@
+---
+
+- name: Update apt keys
+  command: apt-key update
+
+- name: Update apt cache
+  apt: update_cache=yes
+
+- name: Run apt upgrade
+  apt: upgrade=yes
+
+- name: Install unattended-upgrades
+  apt: pkg=unattended-upgrades state=present
+
+- name: Adjust apt update intervals
+  copy: src=templates/apt_auto_upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades
+
+- name: Make sure unattended-upgrades only installs security updates
+  lineinfile: dest=/etc/apt/apt.conf.d/50unattended-upgrades regexp="-updates" state=absent
+
+- name: Make sure unattended-upgrades only installs security updates
+  lineinfile: dest=/etc/apt/apt.conf.d/50unattended-upgrades regexp="-proposed" state=absent
+
+- name: Make sure unattended-upgrades only installs security updates
+  lineinfile: dest=/etc/apt/apt.conf.d/50unattended-upgrades regexp="-backports" state=absent

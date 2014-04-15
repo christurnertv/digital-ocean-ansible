@@ -1,0 +1,39 @@
+---
+
+- name: Change root password
+  user: name=root password={{ new_root_password }}
+  when: new_root_password is defined
+
+- name: Lock the root user (use 'sudo passwd root' to re-enable)
+  command: passwd -l root
+
+- name: Remove sudo group rights
+  lineinfile: dest=/etc/sudoers regexp="^%sudo" state=absent validate='visudo -cf %s'
+
+- name: Create {{ new_user }} user account
+  user: name={{ new_user }} password={{ new_user_password }} shell=/bin/bash state=present #generate_ssh_key=yes
+
+- name: Add user {{ new_user }} to sudoers
+  action: lineinfile dest=/etc/sudoers regexp="^{{ new_user }} ALL" line="{{ new_user }} ALL=(ALL) ALL" state=present validate="visudo -cf %s"
+
+- name: Ensure public key is in authorized_keys
+  authorized_key:
+    key: "{{ auth_public_key }}"
+    user: "{{ new_user }}"
+
+- name: Update ssh parameters
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: "^{{ item.key }}"
+    line: "{{ item.key }} {{ item.value }}"
+    insertafter: EOF
+  with_items:
+    - { key: 'Port', value: '{{ ssh_port | default("22") }}' }
+    - { key: 'PermitRootLogin', value: 'no' }
+    - { key: 'PasswordAuthentication', value: 'no' }
+    - { key: 'LoginGraceTime', value: '20' }
+    - { key: 'X11Forwarding', value: 'no' }
+    - { key: 'AllowUsers', value: '{{ new_user }}' }
+  notify:
+    - restart ssh

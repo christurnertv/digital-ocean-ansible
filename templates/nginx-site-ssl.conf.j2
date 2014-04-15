@@ -1,0 +1,42 @@
+# www to non-www
+server {
+  server_name www.{{ domain }};
+  return 301 $scheme://{{ domain }}$request_uri;
+}
+
+# non-ssl to ssl
+server {
+  listen 80;
+  server_name {{ domain }};
+  rewrite ^(.*) https://{{ domain }}$request_uri? permanent;
+}
+
+server {
+  listen 443 ssl;
+
+  server_name {{ domain }};
+  root /home/{{ user }}/sites/{{ domain }}/public;
+
+  ssl_certificate /etc/ssl/localcerts/www.{{ domain }}.combined.crt;
+  ssl_certificate_key /etc/ssl/localcerts/www.{{ domain }}.key;
+
+  access_log  /var/log/nginx/{{ domain }}-access.log;
+  error_log  /var/log/nginx/{{ domain }}-error.log;
+
+  include /etc/nginx/includes/location.conf;
+
+  location / {
+    try_files $uri $uri/ /index.php?$args;
+    #try_files $uri $uri/ /index.php?q=&$args; #wordpress
+  }
+
+  # pass all .php files to php-fpm
+  location ~ \.php$ {
+    try_files $uri =404;
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    fastcgi_param  PHP_VALUE  "open_basedir=/var/log/php/:/var/lib/php/:/home/{{ user }}/sites/{{ domain }}/";
+    include fastcgi_params;
+    fastcgi_index index.php;
+    fastcgi_pass unix:/var/run/php5-fpm-{{ domain }}.sock;
+  }
+}

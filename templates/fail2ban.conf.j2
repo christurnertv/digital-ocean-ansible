@@ -1,0 +1,61 @@
+# Fail2Ban configuration file.
+#
+
+# to view current bans, run one of the following:
+# fail2ban-client status ssh
+# iptables --list -n | fgrep DROP
+
+# The DEFAULT allows a global definition of the options. They can be overridden
+# in each jail afterwards.
+
+[DEFAULT]
+
+ignoreip = 127.0.0.1
+bantime  = 600
+maxretry = 3
+backend = auto
+usedns = warn
+destemail = {{ admin_email }}
+
+#
+# ACTIONS
+#
+
+banaction = iptables-multiport
+mta = sendmail
+protocol = tcp
+chain = INPUT
+
+#
+# Action shortcuts. To be used to define action parameter
+
+# The simplest action to take: ban only
+action_ = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+
+# ban & send an e-mail with whois report to the destemail.
+action_mw = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+              %(mta)s-whois[name=%(__name__)s, dest="%(destemail)s", protocol="%(protocol)s", chain="%(chain)s"]
+
+# ban & send an e-mail with whois report and relevant log lines
+# to the destemail.
+action_mwl = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+               %(mta)s-whois-lines[name=%(__name__)s, dest="%(destemail)s", logpath=%(logpath)s, chain="%(chain)s"]
+
+# default action
+action = %(action_mw)s
+
+[ssh]
+
+enabled  = true
+port = 987
+filter   = sshd
+logpath  = /var/log/auth.log
+maxretry = 6
+
+[ssh-ddos]
+
+enabled = true
+port = 987
+filter   = sshd-ddos
+logpath  = /var/log/auth.log
+maxretry = 6

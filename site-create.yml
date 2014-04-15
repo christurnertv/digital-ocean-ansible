@@ -1,0 +1,64 @@
+---
+
+# Run as follows:
+# ansible-playbook -i hosts site-create.yml -e "domain=example.com"
+
+- name: Site Create
+  hosts: all
+
+  vars:
+
+  # this is required, change it
+  - domain: example.com
+
+  # leave these alone
+  - www_home: /var/www
+  - git_home: /var/git
+  - git_create: True
+
+  tasks:
+
+  - name: Create site directory
+    file: path={{ www_home }}/{{ domain }} state=directory owner={{ ansible_ssh_user }} group=www-data mode=0755
+    sudo: yes
+
+  - name: Deploy nginx site config
+    template: src=templates/nginx-site.conf.j2 dest=/etc/nginx/sites-available/{{ domain }} owner={{ ansible_ssh_user }}
+    sudo: yes
+    notify:
+      - restart nginx
+
+  - name: Activate nginx site
+    file: src=/etc/nginx/sites-available/{{ domain }} dest=/etc/nginx/sites-enabled/{{ domain }} state=link owner={{ ansible_ssh_user }}
+    sudo: yes
+    notify:
+      - restart nginx
+
+  - name: Deploy php-fpm pool config
+    template: src=templates/php-fpm-pool.conf.j2 dest=/etc/php5/fpm/pool.d/{{ domain }}.conf owner={{ ansible_ssh_user }}
+    sudo: yes
+    notify:
+      - restart php-fpm
+
+  - name: Create git repo directory
+    file: path={{ git_home }}/{{ domain }}.git state=directory owner={{ ansible_ssh_user }}
+    sudo: yes
+    when: git_create
+
+  - name: Create git repo for new site
+    shell: git init --bare chdir={{ git_home }}/{{ domain }}.git creates={{ git_home }}/{{ domain }}.git/config
+    when: git_create
+
+  - name: Create git post-receive hook
+    template: src=templates/git-post-receive.j2 dest={{ git_home }}/{{ domain }}.git/hooks/post-receive mode=0755
+    when: git_create
+
+  - debug: msg="git remote add web ssh{{':'}}//{{ ansible_ssh_user }}@{{ ansible_ssh_host }}{{':'}}{{ ansible_ssh_port }}{{ git_home }}/{{ domain }}.git"
+    when: git_create
+
+  - debug: msg="git push web +master{{':'}}refs/heads/master"
+    when: git_create
+
+  handlers:
+
+  - include: handlers.yml

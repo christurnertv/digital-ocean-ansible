@@ -1,0 +1,7 @@
+---
+
+- name: Install system utilties
+  apt: package={{ item }} state=present
+  with_items:
+    - vim
+    - git

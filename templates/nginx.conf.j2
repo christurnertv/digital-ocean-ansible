@@ -1,0 +1,58 @@
+user www-data;
+worker_processes {{ ansible_processor_count }};
+
+pid /var/run/nginx.pid;
+
+events {
+  worker_connections 1024;   # default 512
+}
+
+http {
+
+  ##
+  # Basic Settings
+  ##
+
+  charset                        utf-8;
+  max_ranges                     0;      # default unlimited (restricts resuming)
+  keepalive_timeout              30;     # default 65
+  sendfile                       on;
+  server_tokens                  off;
+  source_charset                 utf-8;
+  tcp_nopush                     on;
+  tcp_nodelay                    on;
+  server_names_hash_bucket_size  64;
+  server_names_hash_max_size     512;   # ls /etc/nginx/sites-available/ | wc -c
+  types_hash_max_size            2048;
+
+  include /etc/nginx/mime.types;
+  default_type application/octet-stream;
+
+  index index.php index.html index.htm;
+
+  ##
+  # Logging Settings
+  ##
+
+  #access_log off;
+  #error_log  /var/log/nginx/error.log crit;
+
+  access_log /var/log/nginx/access.log;
+  error_log  /var/log/nginx/error.log;
+
+  ##
+  # Gzip Settings
+  ##
+
+  gzip on;
+  gzip_disable "msie6";
+  gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
+  ##
+  # Virtual Host Configs
+  ##
+
+  include /etc/nginx/conf.d/*.conf;
+  include /etc/nginx/sites-enabled/*;
+
+}

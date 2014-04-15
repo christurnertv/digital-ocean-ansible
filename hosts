@@ -1,0 +1,1 @@
+hostname    ansible_ssh_host=XXX.XXX.XXX.XXX    ansible_ssh_port=22    ansible_ssh_user=root    ansible_ssh_private_key_file=~/.ssh/id_rsa
