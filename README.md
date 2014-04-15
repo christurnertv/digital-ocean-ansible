@@ -70,9 +70,9 @@ If you are prompted to accept the identity of the remote server, type "yes" and 
 
 ## 6. Install Ansible and Dependencies
 
-Ansible is an IT automation platform written in Python. We will be using it to install and configure software on our server.
+Ansible is an IT automation platform written in Python. We will be using it to install and configure software on our server from our Mac.
 
-We will be installing Ansible from source as opposed to using `pip` since some of the modules are not loaded correctly when installed via `pip`. Run the following commands to install Ansible:
+We will be installing Ansible from source as opposed to using `pip` since some of the modules are not loaded correctly when installed via `pip`. Run the following commands in your Mac OSX Terminal to install Ansible:
 
 ```
 cd ~/Downloads
@@ -85,6 +85,8 @@ Next, install dependencies as follows:
 
 ```
 sudo easy_install pip
+export CFLAGS=-Qunused-arguments
+export CPPFLAGS=-Qunused-arguments
 sudo pip install paramiko PyYAML jinja2 httplib2
 ```
 
