@@ -1,16 +1,10 @@
 ---
 
 # Run as follows:
-# ansible-playbook -i hosts site-init.yml -e "hostname=server1" "domain=example.com" "admin_email=admin@example.com"
+# ansible-playbook -i hosts server-init.yml -e "hostname=server1" -e "domain=example.com" -e "admin_email=admin@example.com"
 
 - name: Server initialization
-  hosts: all
-
-  vars:
-
-  - hostname: server1
-  - domain: domain.com
-  - admin_email: admin@example.com
+  hosts: "{{ hostname }}"
 
   tasks:
 

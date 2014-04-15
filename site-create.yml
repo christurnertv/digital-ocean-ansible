@@ -1,17 +1,13 @@
 ---
 
 # Run as follows:
-# ansible-playbook -i hosts site-create.yml -e "domain=example.com"
+# ansible-playbook -i hosts site-create.yml -e "hostname=server1" -e "domain=example.com"
 
 - name: Site Create
-  hosts: all
+  hosts: "{{ hostname }}"
 
   vars:
 
-  # this is required, change it
-  - domain: example.com
-
-  # leave these alone
   - www_home: /var/www
   - git_home: /var/git
   - git_create: True

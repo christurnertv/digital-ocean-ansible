@@ -1,4 +1,6 @@
 ---
 
 - name: Reboot server
-  command: /sbin/reboot
+  command: echo "Rebooting..."
+  notify:
+    - restart server

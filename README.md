@@ -109,7 +109,7 @@ Now we are finally ready to get our server configured. It is as simple as runnin
 
 ```
 cd ~/Desktop/digital-ocean-ansible
-ansible-playbook -i hosts site-init.yml -e "hostname=server1" "domain=example.com" "admin_email=admin@example.com"
+ansible-playbook -i hosts server-init.yml -e "hostname=server1" -e "domain=example.com" -e "admin_email=admin@example.com"
 ```
 
 When the script is finished, your server will reboot. Once it reboots, you can start creating and deploying websites.
@@ -122,7 +122,7 @@ To create a new site, run the following commands (replace placeholders with real
 
 ```
 cd ~/Desktop/digital-ocean-ansible
-ansible-playbook -i hosts site-create.yml -e "domain=example.com"
+ansible-playbook -i hosts site-create.yml -e "hostname=server1" -e "domain=example.com"
 ```
 
 When the command finishes running you will see a couple log statements that show the proper Git remote to add to your repository and also the command for how to push to the server. They will look something like this:
