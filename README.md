@@ -87,9 +87,8 @@ Next, install dependencies as follows:
 
 ```
 sudo easy_install pip
-CFLAGS=-Qunused-arguments
-CPPFLAGS=-Qunused-arguments
-ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future bundle install
+export CFLAGS=-Qunused-arguments
+export CPPFLAGS=-Qunused-arguments
 sudo pip install paramiko PyYAML jinja2 markupsafe httplib2
 ```
 
