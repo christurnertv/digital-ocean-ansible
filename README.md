@@ -163,6 +163,14 @@ None, use at your own risk.
 
 It is advisable to secure your MySQL installation by running the `mysql_secure_installation` command.
 
+If you are running Laravel, do not for get to change the permissions on the `storage` directory and run composer.
+
+```
+cd /var/www/example.com
+chmod o+x app/storage
+composer install
+```
+
 If you want to use password authentication with Ansible in OSX, you will need to install sshpass as follows:
 
 ```
