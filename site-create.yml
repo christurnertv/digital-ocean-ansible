@@ -15,7 +15,11 @@
   tasks:
 
   - name: Create site directory
-    file: path={{ www_home }}/{{ domain }} state=directory owner={{ ansible_ssh_user }} group=www-data mode=0755
+    file: path={{ www_home }}/{{ domain }} state=directory owner=www-data group=www-data mode=0755
+    sudo: yes
+
+  - name: Ensure directory permissions persit
+    command: chmod -R g+rws {{ www_home }}/{{ domain }}
     sudo: yes
 
   - name: Deploy nginx site config
