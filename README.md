@@ -89,7 +89,7 @@ Next, install dependencies as follows:
 sudo easy_install pip
 export CFLAGS=-Qunused-arguments
 export CPPFLAGS=-Qunused-arguments
-sudo pip install paramiko PyYAML jinja2 markupsafe httplib2
+sudo ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future pip install mitmproxy pip install paramiko PyYAML jinja2 markupsafe httplib2
 ```
 
 ## 7. Download, Configure, and Run Ansible Setup Script
