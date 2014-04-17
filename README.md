@@ -89,7 +89,7 @@ Next, install dependencies as follows:
 sudo easy_install pip
 export CFLAGS=-Qunused-arguments
 export CPPFLAGS=-Qunused-arguments
-sudo ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future pip install mitmproxy pip install paramiko PyYAML jinja2 markupsafe httplib2
+sudo pip install mitmproxy pip install paramiko PyYAML jinja2 markupsafe httplib2
 ```
 
 ## 7. Download, Configure, and Run Ansible Setup Script
@@ -167,7 +167,7 @@ If you are running Laravel, do not for get to change the permissions on the `sto
 
 ```
 cd /var/www/example.com
-chmod o+x app/storage
+chmod -R g+w app/storage
 composer install
 ```
 
