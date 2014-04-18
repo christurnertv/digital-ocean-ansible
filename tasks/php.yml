@@ -30,13 +30,13 @@
   file: path=/var/log/php-fpm state=directory owner=www-data
 
 - name: Create php log directory
-  file: path=/etc/log/php state=directory owner=www-data
+  file: path=/var/log/php state=directory owner=www-data
 
 - name: Create php upload directory
-  file: path=/etc/lib/php/upload state=directory owner=www-data
+  file: path=/var/lib/php/upload state=directory owner=www-data
 
 - name: Create php session directory
-  file: path=/etc/lib/php/session state=directory owner=www-data
+  file: path=/var/lib/php/session state=directory owner=www-data
 
 - name: Modify php.ini settings
   copy: src=templates/php.ini dest=/etc/php5/fpm/php.ini
